@@ -1,5 +1,6 @@
 import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:adaptive_dialog/src/extensions/extensions.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
 
@@ -12,6 +13,8 @@ import 'package:meta/meta.dart';
 /// [defaultType] only works for cupertino style and if it is specified
 /// OK or Cancel button label will be changed to bold.
 /// [actionsOverflowDirection] works only for Material style currently.
+/// [okTextStyle] and [cancelTextStyle] allow customization of button text styles.
+/// By default, iOS style uses blue color for action items.
 @useResult
 Future<OkCancelResult> showOkCancelAlertDialog({
   required BuildContext context,
@@ -34,14 +37,26 @@ Future<OkCancelResult> showOkCancelAlertDialog({
   PopInvokedWithResultCallback<OkCancelResult>? onPopInvokedWithResult,
   AdaptiveDialogBuilder? builder,
   RouteSettings? routeSettings,
+  TextStyle? okTextStyle,
+  TextStyle? cancelTextStyle,
 }) async {
   final theme = Theme.of(context);
   final adaptiveStyle = style ?? AdaptiveDialog.instance.defaultStyle;
   final isMaterial = adaptiveStyle.isMaterial(theme);
+  final isIOSStyle = adaptiveStyle.effectiveStyle(theme) == AdaptiveStyle.iOS;
+  
   String defaultCancelLabel() {
     final label = MaterialLocalizations.of(context).cancelButtonLabel;
     return isMaterial ? label : label.capitalizedForce;
   }
+
+  // Default text styles with iOS blue color for action items
+  final TextStyle defaultOkTextStyle = isIOSStyle
+      ? const TextStyle(color: CupertinoColors.systemBlue)
+      : const TextStyle();
+  final TextStyle defaultCancelTextStyle = isIOSStyle
+      ? const TextStyle(color: CupertinoColors.systemBlue)
+      : const TextStyle();
 
   final result = await showAlertDialog<OkCancelResult>(
     routeSettings: routeSettings,
@@ -62,6 +77,7 @@ Future<OkCancelResult> showOkCancelAlertDialog({
         label: cancelLabel ?? defaultCancelLabel(),
         key: OkCancelResult.cancel,
         isDefaultAction: defaultType == OkCancelAlertDefaultType.cancel,
+        textStyle: cancelTextStyle ?? defaultCancelTextStyle,
       ),
       AlertDialogAction(
         label: okLabel ?? MaterialLocalizations.of(context).okButtonLabel,
@@ -69,6 +85,7 @@ Future<OkCancelResult> showOkCancelAlertDialog({
         isDefaultAction:
             defaultType == null || defaultType == OkCancelAlertDefaultType.ok,
         isDestructiveAction: isDestructiveAction,
+        textStyle: okTextStyle ?? defaultOkTextStyle,
       ),
     ],
   );
