@@ -15,6 +15,7 @@ import 'package:meta/meta.dart';
 /// [actionsOverflowDirection] works only for Material style currently.
 /// [okTextStyle] and [cancelTextStyle] allow customization of button text styles.
 /// By default, iOS style uses blue color for action items.
+/// When [isDestructiveAction] is true, the OK button text color will be automatically set to red.
 @useResult
 Future<OkCancelResult> showOkCancelAlertDialog({
   required BuildContext context,
@@ -58,6 +59,14 @@ Future<OkCancelResult> showOkCancelAlertDialog({
       ? const TextStyle(color: CupertinoColors.systemBlue)
       : const TextStyle();
 
+  // When isDestructiveAction is true, override the OK button text color to red
+  TextStyle finalOkTextStyle = okTextStyle ?? defaultOkTextStyle;
+  if (isDestructiveAction) {
+    finalOkTextStyle = finalOkTextStyle.copyWith(
+      color: isIOSStyle ? CupertinoColors.destructiveRed : Colors.red,
+    );
+  }
+
   final result = await showAlertDialog<OkCancelResult>(
     routeSettings: routeSettings,
     context: context,
@@ -85,7 +94,7 @@ Future<OkCancelResult> showOkCancelAlertDialog({
         isDefaultAction:
             defaultType == null || defaultType == OkCancelAlertDefaultType.ok,
         isDestructiveAction: isDestructiveAction,
-        textStyle: okTextStyle ?? defaultOkTextStyle,
+        textStyle: finalOkTextStyle,
       ),
     ],
   );
