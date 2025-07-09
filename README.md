@@ -21,6 +21,28 @@ Convenient wrapper of [showAlertDialog](https://pub.dev/documentation/adaptive_d
 | <img width="497" alt="n3" src="https://user-images.githubusercontent.com/1255062/77220732-5a1f1e80-6b86-11ea-8e1f-beb08e45387a.png"> | <img width="497" alt="n4" src="https://user-images.githubusercontent.com/1255062/77220733-5a1f1e80-6b86-11ea-8a2a-3f60185877a1.png"> |
 | <img width="497" alt="n5" src="https://user-images.githubusercontent.com/1255062/77220734-5ab7b500-6b86-11ea-941b-7327f5302c9e.png"> | <img width="497" alt="n6" src="https://user-images.githubusercontent.com/1255062/77220736-5b504b80-6b86-11ea-9559-cab8f725d6fd.png"> |
 
+### Custom Text Styles
+
+The `showOkCancelAlertDialog` now supports customizable text styles for OK and Cancel buttons:
+
+```dart
+showOkCancelAlertDialog(
+  context: context,
+  title: 'Custom Styles',
+  message: 'This dialog has custom text styles',
+  okTextStyle: TextStyle(
+    color: Colors.red,
+    fontWeight: FontWeight.bold,
+  ),
+  cancelTextStyle: TextStyle(
+    color: Colors.blue,
+    fontWeight: FontWeight.normal,
+  ),
+);
+```
+
+By default, iOS style dialogs use the system blue color (`CupertinoColors.systemBlue`) for action items, maintaining platform consistency. Custom styles are optional and will override the defaults when provided.
+
 ## [showConfirmationDialog](https://pub.dev/documentation/adaptive_dialog/latest/adaptive_dialog/showConfirmationDialog.html)
 
 Show [Confirmation Dialog](https://material.io/components/dialogs#confirmation-dialog). For Cupertino, fallback to ActionSheet.
