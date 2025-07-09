@@ -31,7 +31,7 @@ showOkCancelAlertDialog(
   title: 'Custom Styles',
   message: 'This dialog has custom text styles',
   okTextStyle: TextStyle(
-    color: Colors.red,
+    color: Colors.green,
     fontWeight: FontWeight.bold,
   ),
   cancelTextStyle: TextStyle(
@@ -41,7 +41,29 @@ showOkCancelAlertDialog(
 );
 ```
 
-By default, iOS style dialogs use the system blue color (`CupertinoColors.systemBlue`) for action items, maintaining platform consistency. Custom styles are optional and will override the defaults when provided.
+### Destructive Actions
+
+When `isDestructiveAction` is set to `true`, the OK button text color is automatically overridden to red, regardless of any custom `okTextStyle` provided:
+
+```dart
+showOkCancelAlertDialog(
+  context: context,
+  title: 'Delete Item',
+  message: 'Are you sure you want to delete this item?',
+  isDestructiveAction: true, // This will make the OK button red
+  okLabel: 'Delete',
+  cancelLabel: 'Cancel',
+  // Even if you provide okTextStyle, the color will be red for destructive actions
+  okTextStyle: TextStyle(fontWeight: FontWeight.bold),
+);
+```
+
+### Default Behavior
+
+- **iOS Style**: Uses system blue color (`CupertinoColors.systemBlue`) for action items by default
+- **Material Style**: Uses default Material Design styling
+- **Destructive Actions**: Automatically uses red color (`CupertinoColors.destructiveRed` for iOS, `Colors.red` for Material)
+- **Custom Styles**: Optional and will override defaults when provided (except for destructive action color)
 
 ## [showConfirmationDialog](https://pub.dev/documentation/adaptive_dialog/latest/adaptive_dialog/showConfirmationDialog.html)
 
