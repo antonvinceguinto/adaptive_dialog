@@ -34,10 +34,17 @@ extension AlertDialogActionEx<T> on AlertDialogAction<T> {
   Widget convertToIOSDialogAction({
     required ActionCallback<T> onPressed,
   }) {
+    // For iOS, we need to handle the destructive color manually since CupertinoDialogAction
+    // might override our custom textStyle when isDestructiveAction is true
+    TextStyle finalTextStyle = textStyle;
+    if (isDestructiveAction && (textStyle.color == null || textStyle.color == CupertinoColors.systemBlue)) {
+      finalTextStyle = textStyle.copyWith(color: CupertinoColors.destructiveRed);
+    }
+    
     return CupertinoDialogAction(
       isDefaultAction: isDefaultAction,
       isDestructiveAction: isDestructiveAction,
-      textStyle: textStyle,
+      textStyle: finalTextStyle,
       onPressed: () => onPressed(key),
       child: Text(label),
     );
@@ -53,10 +60,8 @@ extension AlertDialogActionEx<T> on AlertDialogAction<T> {
       child: Text(
         label,
         style: isDestructiveAction
-            ? const TextStyle(
-                color: CupertinoColors.destructiveRed,
-              )
-            : null,
+            ? textStyle.copyWith(color: CupertinoColors.destructiveRed)
+            : textStyle,
       ),
     );
   }
@@ -66,12 +71,16 @@ extension AlertDialogActionEx<T> on AlertDialogAction<T> {
     required Color destructiveColor,
     required bool fullyCapitalized,
   }) {
+    // For Material, properly merge the destructive color with the custom textStyle
+    TextStyle finalTextStyle = textStyle;
+    if (isDestructiveAction) {
+      finalTextStyle = textStyle.copyWith(color: destructiveColor);
+    }
+    
     return TextButton(
       child: Text(
         fullyCapitalized ? label.toUpperCase() : label,
-        style: textStyle.copyWith(
-          color: isDestructiveAction ? destructiveColor : null,
-        ),
+        style: finalTextStyle,
       ),
       onPressed: () => onPressed(key),
     );
