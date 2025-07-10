@@ -34,17 +34,19 @@ extension AlertDialogActionEx<T> on AlertDialogAction<T> {
   Widget convertToIOSDialogAction({
     required ActionCallback<T> onPressed,
   }) {
-    // For iOS, we need to handle the destructive color manually since CupertinoDialogAction
-    // might override our custom textStyle when isDestructiveAction is true
-    TextStyle finalTextStyle = textStyle;
-    if (isDestructiveAction && (textStyle.color == null || textStyle.color == CupertinoColors.systemBlue)) {
-      finalTextStyle = textStyle.copyWith(color: CupertinoColors.destructiveRed);
-    }
+    // Check if we have a custom red color in textStyle
+    final bool hasCustomRedColor = textStyle.color != null && 
+        (textStyle.color == CupertinoColors.destructiveRed || 
+         textStyle.color == Colors.red);
+    
+    // If we have custom red color, don't set isDestructiveAction to prevent 
+    // CupertinoDialogAction from overriding our custom style
+    final bool shouldUseDestructiveFlag = isDestructiveAction && !hasCustomRedColor;
     
     return CupertinoDialogAction(
       isDefaultAction: isDefaultAction,
-      isDestructiveAction: isDestructiveAction,
-      textStyle: finalTextStyle,
+      isDestructiveAction: shouldUseDestructiveFlag,
+      textStyle: textStyle,
       onPressed: () => onPressed(key),
       child: Text(label),
     );
