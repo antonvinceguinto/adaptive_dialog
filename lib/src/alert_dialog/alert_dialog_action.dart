@@ -34,19 +34,32 @@ extension AlertDialogActionEx<T> on AlertDialogAction<T> {
   Widget convertToIOSDialogAction({
     required ActionCallback<T> onPressed,
   }) {
-    // Check if we have a custom red color in textStyle
-    final bool hasCustomRedColor = textStyle.color != null && 
-        (textStyle.color == CupertinoColors.destructiveRed || 
-         textStyle.color == Colors.red);
+    // Custom orange color for the theme
+    const Color customOrangeColor = Color(0xFFFF5D31);
     
-    // If we have custom red color, don't set isDestructiveAction to prevent 
-    // CupertinoDialogAction from overriding our custom style
-    final bool shouldUseDestructiveFlag = isDestructiveAction && !hasCustomRedColor;
+    // Check if we have a custom color in textStyle
+    final bool hasCustomColor = textStyle.color != null;
     
+    // Determine the final text style with proper color priority:
+    // 1. If destructive action -> use red
+    // 2. If custom color in textStyle -> use that
+    // 3. Otherwise -> use orange theme color
+    TextStyle finalTextStyle = textStyle;
+    
+    if (isDestructiveAction) {
+      // Destructive actions should remain red
+      finalTextStyle = textStyle.copyWith(color: CupertinoColors.destructiveRed);
+    } else if (!hasCustomColor) {
+      // Apply orange color only if no custom color is specified
+      finalTextStyle = textStyle.copyWith(color: customOrangeColor);
+    }
+    
+    // Don't use isDestructiveAction flag if we're handling colors manually
+    // This prevents CupertinoDialogAction from overriding our custom styles
     return CupertinoDialogAction(
       isDefaultAction: isDefaultAction,
-      isDestructiveAction: shouldUseDestructiveFlag,
-      textStyle: textStyle,
+      isDestructiveAction: false, // Handle colors manually via textStyle
+      textStyle: finalTextStyle,
       onPressed: () => onPressed(key),
       child: Text(label),
     );
