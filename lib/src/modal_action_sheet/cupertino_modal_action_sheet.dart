@@ -27,9 +27,6 @@ class CupertinoModalActionSheet<T> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Custom orange color for the theme
-    const Color customOrangeColor = Color(0xFFFF5D31);
-    
     final title = this.title;
     final message = this.message;
     return PopScope(
@@ -40,7 +37,6 @@ class CupertinoModalActionSheet<T> extends StatelessWidget {
         child: CupertinoActionSheet(
           title: title == null ? null : Text(title),
           message: message == null ? null : Text(message),
-          // Cancel button should keep default styling for better UX
           cancelButton: CupertinoActionSheetAction(
             isDefaultAction: !actions.any((a) => a.isDefaultAction),
             onPressed: () => onPressed(null),
@@ -53,32 +49,17 @@ class CupertinoModalActionSheet<T> extends StatelessWidget {
           ),
           actions: actions
               .map(
-                (a) {
-                  // Determine the text style with proper color priority:
-                  // 1. If destructive action -> use red
-                  // 2. If custom color in textStyle -> use that
-                  // 3. Otherwise -> use orange theme color
-                  TextStyle finalTextStyle = a.textStyle;
-                  
-                  if (a.isDestructiveAction) {
-                    // Destructive actions should remain red
-                    finalTextStyle = a.textStyle.copyWith(color: CupertinoColors.destructiveRed);
-                  } else if (a.textStyle.color == null) {
-                    // Apply orange color only if no custom color is specified
-                    finalTextStyle = a.textStyle.copyWith(color: customOrangeColor);
-                  }
-                  
-                  return CupertinoActionSheetAction(
-                    // Don't use isDestructiveAction flag since we're handling colors manually
-                    isDestructiveAction: false,
-                    isDefaultAction: a.isDefaultAction,
-                    onPressed: () => onPressed(a.key),
-                    child: Text(
-                      a.label,
-                      style: finalTextStyle,
-                    ),
-                  );
-                },
+                (a) => CupertinoActionSheetAction(
+                  // Always use native blue color by setting isDestructiveAction to false
+                  // This ensures all buttons (including destructive ones) use the native blue color
+                  isDestructiveAction: false,
+                  isDefaultAction: a.isDefaultAction,
+                  onPressed: () => onPressed(a.key),
+                  child: Text(
+                    a.label,
+                    style: a.textStyle,
+                  ),
+                ),
               )
               .toList(),
         ),
