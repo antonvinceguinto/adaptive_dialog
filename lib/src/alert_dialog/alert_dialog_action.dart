@@ -48,6 +48,9 @@ extension AlertDialogActionEx<T> on AlertDialogAction<T> {
   Widget convertToMacOSDialogAction({
     required ActionCallback<T> onPressed,
   }) {
+    // Custom color for macOS - use #FF5D31 instead of red destructive color
+    const Color customMacOSColor = Color(0xFFFF5D31);
+    
     return PushButton(
       controlSize: ControlSize.large,
       secondary: isDestructiveAction || !isDefaultAction,
@@ -55,7 +58,7 @@ extension AlertDialogActionEx<T> on AlertDialogAction<T> {
       child: Text(
         label,
         style: isDestructiveAction
-            ? textStyle.copyWith(color: CupertinoColors.destructiveRed)
+            ? textStyle.copyWith(color: customMacOSColor)
             : textStyle,
       ),
     );
