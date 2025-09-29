@@ -46,6 +46,9 @@ class _MaterialTextInputDialogState extends State<MaterialTextInputDialog> {
   final _formKey = GlobalKey<FormState>();
   var _autovalidateMode = AutovalidateMode.disabled;
 
+  // Custom Android color - 0xFFFF5D31
+  static const Color _customAndroidColor = Color(0xFFFF5D31);
+
   @override
   void initState() {
     super.initState();
@@ -89,8 +92,9 @@ class _MaterialTextInputDialogState extends State<MaterialTextInputDialog> {
     final okText = Text(
       (widget.fullyCapitalized ? okLabel?.toUpperCase() : okLabel) ??
           MaterialLocalizations.of(context).okButtonLabel,
-      style: TextStyle(
-        color: widget.isDestructiveAction ? colorScheme.error : null,
+      style: const TextStyle(
+        // Always use custom color regardless of isDestructiveAction
+        color: _customAndroidColor,
       ),
     );
     return PopScope(
@@ -153,6 +157,7 @@ class _MaterialTextInputDialogState extends State<MaterialTextInputDialog> {
                         ? cancelLabel?.toUpperCase()
                         : cancelLabel) ??
                     MaterialLocalizations.of(context).cancelButtonLabel,
+                style: const TextStyle(color: _customAndroidColor),
               ),
             ),
             TextButton(
