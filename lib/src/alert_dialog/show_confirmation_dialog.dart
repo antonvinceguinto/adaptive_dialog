@@ -129,6 +129,9 @@ class _ConfirmationMaterialDialogState<T>
   T? _selectedKey;
   final _scrollController = ScrollController();
 
+  // Custom Android color - 0xFFFF5D31
+  static const Color _customAndroidColor = Color(0xFFFF5D31);
+
   @override
   void initState() {
     super.initState();
@@ -197,6 +200,7 @@ class _ConfirmationMaterialDialogState<T>
                             });
                           },
                           toggleable: widget.toggleable,
+                          activeColor: _customAndroidColor,
                         ),
                       )
                       .toList(),
@@ -217,6 +221,7 @@ class _ConfirmationMaterialDialogState<T>
                               ? cancelLabel?.toUpperCase()
                               : cancelLabel) ??
                           MaterialLocalizations.of(context).cancelButtonLabel,
+                      style: TextStyle(color: _customAndroidColor),
                     ),
                     onPressed: () => widget.onSelect(null),
                   ),
@@ -229,6 +234,7 @@ class _ConfirmationMaterialDialogState<T>
                               ? okLabel?.toUpperCase()
                               : okLabel) ??
                           MaterialLocalizations.of(context).okButtonLabel,
+                      style: TextStyle(color: _customAndroidColor),
                     ),
                   ),
                 ],
