@@ -1,4 +1,5 @@
 import 'package:adaptive_dialog/adaptive_dialog.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 /// Show OK alert dialog, whose appearance is adaptive according to platform
@@ -29,6 +30,13 @@ Future<OkCancelResult> showOkAlertDialog({
   final theme = Theme.of(context);
   final adaptiveStyle = style ?? AdaptiveDialog.instance.defaultStyle;
   final isMacOS = adaptiveStyle.effectiveStyle(theme) == AdaptiveStyle.macOS;
+  final isIOSStyle = adaptiveStyle.effectiveStyle(theme) == AdaptiveStyle.iOS;
+  
+  // Custom colors - native blue for iOS, #FF5D31 for Android
+  final TextStyle okTextStyle = isIOSStyle
+      ? const TextStyle(color: CupertinoColors.systemBlue)
+      : const TextStyle(color: Color(0xFFFF5D31));
+      
   final result = await showAlertDialog<OkCancelResult>(
     routeSettings: routeSettings,
     context: context,
@@ -48,6 +56,7 @@ Future<OkCancelResult> showOkAlertDialog({
         label: okLabel ?? MaterialLocalizations.of(context).okButtonLabel,
         key: OkCancelResult.ok,
         isDefaultAction: isMacOS,
+        textStyle: okTextStyle,
       ),
     ],
   );
