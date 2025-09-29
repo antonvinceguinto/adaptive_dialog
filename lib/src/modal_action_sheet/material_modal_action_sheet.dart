@@ -30,6 +30,10 @@ class MaterialModalActionSheet<T> extends StatelessWidget {
     final title = this.title;
     final message = this.message;
     final materialConfiguration = this.materialConfiguration;
+    
+    // Custom Android color - 0xFFFF5D31
+    const Color customAndroidColor = Color(0xFFFF5D31);
+    
     final children = [
       if (title != null && message == null)
         ListTile(
@@ -53,7 +57,8 @@ class MaterialModalActionSheet<T> extends StatelessWidget {
       ],
       ...actions.map((a) {
         final icon = a.icon;
-        final color = a.isDestructiveAction ? colorScheme.error : null;
+        // Always use custom color for all actions, including destructive ones
+        final color = customAndroidColor;
         return ListTile(
           leading: icon == null
               ? null
