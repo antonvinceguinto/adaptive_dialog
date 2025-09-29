@@ -34,32 +34,12 @@ extension AlertDialogActionEx<T> on AlertDialogAction<T> {
   Widget convertToIOSDialogAction({
     required ActionCallback<T> onPressed,
   }) {
-    // Custom orange color for the theme
-    const Color customOrangeColor = Color(0xFFFF5D31);
-    
-    // Check if we have a custom color in textStyle
-    final bool hasCustomColor = textStyle.color != null;
-    
-    // Determine the final text style with proper color priority:
-    // 1. If destructive action -> use red
-    // 2. If custom color in textStyle -> use that
-    // 3. Otherwise -> use orange theme color
-    TextStyle finalTextStyle = textStyle;
-    
-    if (isDestructiveAction) {
-      // Destructive actions should remain red
-      finalTextStyle = textStyle.copyWith(color: CupertinoColors.destructiveRed);
-    } else if (!hasCustomColor) {
-      // Apply orange color only if no custom color is specified
-      finalTextStyle = textStyle.copyWith(color: customOrangeColor);
-    }
-    
-    // Don't use isDestructiveAction flag if we're handling colors manually
-    // This prevents CupertinoDialogAction from overriding our custom styles
+    // For iOS, always use native blue color by setting isDestructiveAction to false
+    // This ensures all buttons (including destructive ones) use the native blue color
     return CupertinoDialogAction(
       isDefaultAction: isDefaultAction,
-      isDestructiveAction: false, // Handle colors manually via textStyle
-      textStyle: finalTextStyle,
+      isDestructiveAction: false, // Always false to use native blue color
+      textStyle: textStyle,
       onPressed: () => onPressed(key),
       child: Text(label),
     );
@@ -86,16 +66,16 @@ extension AlertDialogActionEx<T> on AlertDialogAction<T> {
     required Color destructiveColor,
     required bool fullyCapitalized,
   }) {
-    // For Material, properly merge the destructive color with the custom textStyle
-    TextStyle finalTextStyle = textStyle;
-    if (isDestructiveAction) {
-      finalTextStyle = textStyle.copyWith(color: destructiveColor);
-    }
+    // Custom Android color - 0xFFFF5D31
+    const Color customAndroidColor = Color(0xFFFF5D31);
     
     return TextButton(
       child: Text(
         fullyCapitalized ? label.toUpperCase() : label,
-        style: finalTextStyle,
+        style: textStyle.copyWith(
+          // Always use the custom Android color, even for destructive actions
+          color: customAndroidColor,
+        ),
       ),
       onPressed: () => onPressed(key),
     );
