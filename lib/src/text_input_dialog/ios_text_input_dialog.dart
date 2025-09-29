@@ -163,8 +163,9 @@ class _IOSTextInputDialogState extends State<IOSTextInputDialog> {
                 ),
                 child: Text(
                   validationMessage,
-                  style: TextStyle(
-                    color: CupertinoColors.systemRed.resolveFrom(context),
+                  style: const TextStyle(
+                    // Use custom orange color for validation errors instead of red
+                    color: Color(0xFFFF5D31),
                     height: 1.2,
                   ),
                   textAlign: TextAlign.start,
@@ -187,11 +188,8 @@ class _IOSTextInputDialogState extends State<IOSTextInputDialog> {
             onPressed: submitIfValid,
             child: Text(
               widget.okLabel ?? MaterialLocalizations.of(context).okButtonLabel,
-              style: TextStyle(
-                color: widget.isDestructiveAction
-                    ? CupertinoColors.systemRed.resolveFrom(context)
-                    : null,
-              ),
+              // Always use native blue - no red destructive colors
+              style: null,
             ),
           ),
         ],
