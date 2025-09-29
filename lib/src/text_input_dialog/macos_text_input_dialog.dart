@@ -167,7 +167,8 @@ class _MacOSTextInputDialogState extends State<MacOSTextInputDialog> {
                       child: Text(
                         validationMessage,
                         style: const TextStyle(
-                          color: CupertinoColors.destructiveRed,
+                          // Use custom color for validation errors instead of red
+                          color: Color(0xFFFF5D31),
                         ),
                       ),
                     ),
@@ -190,14 +191,14 @@ class _MacOSTextInputDialogState extends State<MacOSTextInputDialog> {
                       PushButton(
                         controlSize: ControlSize.large,
                         onPressed: submitIfValid,
-                        secondary: widget.isDestructiveAction,
+                        // Don't use secondary for destructive actions - use consistent styling
+                        secondary: false,
                         child: Text(
                           widget.okLabel ??
                               MaterialLocalizations.of(context).okButtonLabel,
-                          style: TextStyle(
-                            color: widget.isDestructiveAction
-                                ? CupertinoColors.systemRed.resolveFrom(context)
-                                : null,
+                          // Use custom color for macOS instead of red
+                          style: const TextStyle(
+                            color: Color(0xFFFF5D31),
                           ),
                         ),
                       ),
